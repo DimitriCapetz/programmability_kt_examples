@@ -1,9 +1,3 @@
-# Allow self-signed certs
-import ssl
-ssl._create_default_https_context = ssl._create_unverified_context
-
-# Actual script
-
 import argparse
 from jsonrpclib import Server
 import sys
@@ -37,16 +31,18 @@ def enable_backup_port(switchport):
     syslog.syslog("%%IntFail-6-LOG: OSPF Adjacency on backup interface " + switchport + " established")
 
 def main():
-    # Determine model of device for chassis / fixed classification
+    # Ensure eAPI Connection is available
     try:
         device_info = local_switch_req.runCmds(1, ["show hostname"])
+        syslog.syslog("%%IntFail-6-LOG: Interface Failover to " + 
+        device_info[0]["hostname"] + " " + backup_port + " initiated...")
     except:
         syslog.syslog("%%IntFail-6-LOG: Unable to connect to local eAPI. No changes made")
         sys.exit()
     try:
         enable_backup_port(backup_port)
     except:
-        syslog.syslog("%%PeerInt-6-LOG: No changes made")
+        syslog.syslog("%%IntFail-6-LOG: No changes made")
         sys.exit()
 
 if __name__ == '__main__':
