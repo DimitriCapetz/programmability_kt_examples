@@ -1,6 +1,0 @@
-- name: Backup current switch config (eos)
-  eos_config:
-    backup: yes
-  register: backup_eos_location
-  environment: "{{ proxy_env }}"
-  when: ansible_network_os == 'eos'
