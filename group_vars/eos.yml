@@ -1,0 +1,8 @@
+---
+ansible_connection: httpapi
+use_ssl: yes
+ansible_network_os: eos
+ansible_user: admin
+ansible_ssh_pass: bone8181
+ansible_become: yes
+ansible_become_method: enable

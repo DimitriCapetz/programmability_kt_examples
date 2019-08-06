@@ -8,10 +8,17 @@
       eos_command:
         commands: 'show version'
 
-    - name: add some vlans
+    - name: Remove vlans on switchports
+      eos_l2_interface:
+        authorize: yes
+        aggregate:
+        - { name: port-channel2, mode: trunk, native_vlan: 5}
+        state: absent
+
+    - name: nuke some vlans
       eos_vlan:
         authorize: yes
-        timeout: 90
+        timeout: 30
         aggregate:
         - vlan_id: 3000
         - {vlan_id: 3002, name: vlan-3002}
@@ -22,20 +29,10 @@
         - {vlan_id: 4003, name: vlan-4003}
         - {vlan_id: 4004, name: vlan-4004}
         - {vlan_id: 4005, name: vlan-4005}
+        state: absent
 
-    - name: Set vlans on switchports 
-      eos_l2_interface:
-        authorize: yes
-        mode: trunk
-        aggregate:
-        - { name: port-channel2, mode: trunk, trunk_allowed_vlans: 4000-4005, native_vlan: 5}
-
-    - name: configure the login banner
+    - name: remove the login banner
       eos_banner:
         authorize: yes
         banner: login
-        text: |
-          THIS IS THE NEW BANNER
-          PLACED HERE BY ROGUE
-          ANSIBLE USER
-        state: present
+        state: absent
